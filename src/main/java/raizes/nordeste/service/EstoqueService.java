@@ -12,6 +12,7 @@ import raizes.nordeste.model.Produto;
 import raizes.nordeste.model.Unidade;
 import raizes.nordeste.repository.EstoqueRepository;
 import raizes.nordeste.repository.ProdutoRepository;
+import raizes.nordeste.repository.UnidadeRepository;
 
 
 @Service
@@ -21,8 +22,7 @@ public class EstoqueService {
     private EstoqueRepository estoqueRepository;
 
     @Autowired
-    private UnidadeRepository unidadeRepository; //Criar classe
-
+    private UnidadeRepository unidadeRepository; 
     @Autowired
     private ProdutoRepository produtoRepository; 
 
