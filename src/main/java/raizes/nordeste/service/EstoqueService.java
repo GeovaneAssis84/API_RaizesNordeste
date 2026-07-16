@@ -29,7 +29,7 @@ public class EstoqueService {
     @Transactional
     public EstoqueResponseDTO salvarOuAtualizar(EstoqueRequestDTO request) {
         // Verifica se Unidade e Produto existem
-        Unidade unidade = unidadeRepository.findById(request.getUnidadeId())
+    	Unidade unidade = unidadeRepository.findById(request.getUnidadeId())
                 .orElseThrow(() -> new RuntimeException("Unidade não encontrada com o ID: " + request.getUnidadeId()));
 
         Produto produto = produtoRepository.findById(request.getProdutoId())
