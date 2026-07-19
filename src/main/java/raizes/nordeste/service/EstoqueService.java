@@ -56,4 +56,23 @@ public class EstoqueService {
         return dto;
     }
         
+    @Transactional
+    public void baixarEstoque(Long unidadeId, Long produtoId, int quantidadeVendida) {
+        //Busca o registro de estoque da loja e produto
+        Estoque estoque = estoqueRepository.findByUnidadeIdAndProdutoId(unidadeId, produtoId)
+                .orElseThrow(() -> new RuntimeException("Estoque não encontrado para o produto " + produtoId + " na unidade " + unidadeId));
+
+        // Verifica se há estoque suficiente antes de vender
+        if (estoque.getQuantidade() < quantidadeVendida) {
+            throw new IllegalStateException("Estoque insuficiente para o produto: " + estoque.getProduto().getDescricao() + 
+                                            ". Disponível: " + estoque.getQuantidade() + ", Solicitado: " + quantidadeVendida);
+        }
+
+        //Subtrai a quantidade do estoque
+        int novaQuantidade = estoque.getQuantidade() - quantidadeVendida;
+        estoque.setQuantidade(novaQuantidade);
+
+        estoqueRepository.save(estoque);
+    }
+    
 }

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import raizes.nordeste.dto.UnidadeRequestDTO;
 import raizes.nordeste.dto.UnidadeResponseDTO;
+import raizes.nordeste.model.StatusUnidade;
 import raizes.nordeste.service.UnidadeService;
 import java.util.List;
 
@@ -30,11 +31,11 @@ public class UnidadeController {
 
     
     @PatchMapping("/{id}/status")
-    public ResponseEntity<UnidadeResponseDTO> mudarStatus(
+    public ResponseEntity<Void> mudarStatus(
             @PathVariable Long id, 
-            @Valid @RequestBody UnidadeRequestDTO request) {
+            @RequestParam StatusUnidade novoStatus) {
         
-        UnidadeResponseDTO response = unidadeService.atualizarStatus(id, request);
-        return ResponseEntity.ok(response);
+        unidadeService.atualizarStatus(id, novoStatus);
+        return ResponseEntity.noContent().build();
     }
 }

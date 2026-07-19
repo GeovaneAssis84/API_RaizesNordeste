@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import raizes.nordeste.dto.UnidadeRequestDTO;
 import raizes.nordeste.dto.UnidadeResponseDTO;
+import raizes.nordeste.model.StatusUnidade;
 import raizes.nordeste.model.Unidade;
 import raizes.nordeste.repository.UnidadeRepository;
 import java.util.List;
@@ -26,13 +27,13 @@ public class UnidadeService {
     }
 
     @Transactional
-    public UnidadeResponseDTO atualizarStatus(Long id, UnidadeRequestDTO request) {
+    public void atualizarStatus(Long id, StatusUnidade novoStatus) {
         Unidade unidade = unidadeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Unidade não encontrada com o ID: " + id));
         
-        unidade.setStatus(request.getStatus());
+        unidade.setStatus(novoStatus);
         
-        return converterParaResponseDTO(unidadeRepository.save(unidade));
+        unidadeRepository.save(unidade);
     }
 
     @Transactional(readOnly = true)
