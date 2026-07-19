@@ -29,6 +29,12 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoService.cancelarPedido(id));
     }
 
+    // consultar status do pedido
+    @GetMapping("/{id}")
+    public ResponseEntity<PedidoResponseDTO> consultar(@PathVariable Long id) {
+        return ResponseEntity.ok(pedidoService.consultarPedido(id));
+    }
+    
     // Rota para avançar o status
     @PatchMapping("/{id}/status")
     public ResponseEntity<PedidoResponseDTO> mudarStatus(

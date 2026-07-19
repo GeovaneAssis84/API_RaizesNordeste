@@ -37,7 +37,7 @@ public class PagamentoService {
                 .orElseThrow(() -> new RuntimeException("Pedido não encontrado com o ID: " + request.getPedidoId()));
 
         // Só permite pagar se o pedido estiver CRIADO
-        if (pedido.getStatus() != StatusPedido.CRIADO) {
+        if (pedido.getStatus() != StatusPedido.CRIADO && pedido.getStatus()!= StatusPedido.AGUARDANDO_PAGAMENTO) {
             throw new IllegalStateException("Este pedido não está disponível para iniciar pagamento. Status atual: " + pedido.getStatus());
         }
 

@@ -1,6 +1,11 @@
 package raizes.nordeste.service;
 
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,4 +80,19 @@ public class EstoqueService {
         estoqueRepository.save(estoque);
     }
     
+    @Transactional
+    public List<Map<String, Object>>consultarEstoqueUnidade(Long unidadeId){
+    //Lista itens ativos e maiores que zero - valor mínimo pode ser ajustado depois
+    	List<Estoque> estoques = estoqueRepository
+                .findByUnidadeIdAndProdutoAtivoTrueAndQuantidadeGreaterThan(unidadeId, 0);
+    	
+    	return estoques.stream().map(estoque -> {
+    		Map<String, Object> dadosCardapio = new HashMap<>();
+    		dadosCardapio.put("produtoId",estoque.getProduto().getId());
+    		dadosCardapio.put("descricao",estoque.getProduto().getDescricao());
+    		dadosCardapio.put("preco",estoque.getProduto().getPreco());
+    		dadosCardapio.put("quantidadeDisponivel",estoque.getQuantidade());
+            return dadosCardapio;
+    	}).collect(Collectors.toList());
+    }	
 }

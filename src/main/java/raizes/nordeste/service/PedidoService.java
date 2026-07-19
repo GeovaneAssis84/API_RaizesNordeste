@@ -149,5 +149,12 @@ public class PedidoService {
             throw new IllegalStateException("Transição de status inválida: Não é permitido mudar de " + atual + " para " + proximo);
         }
     }
+
+	public PedidoResponseDTO consultarPedido(Long id) {
+	       Pedido pedido = pedidoRepository.findById(id)
+	                .orElseThrow(() -> new RuntimeException("Pedido não encontrado com o ID: " + id));
+
+		return converterParaResponseDTO(pedido);
+	}
     
 }
