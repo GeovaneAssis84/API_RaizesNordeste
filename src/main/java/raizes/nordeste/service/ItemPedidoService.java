@@ -3,8 +3,11 @@ package raizes.nordeste.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import raizes.nordeste.dto.ItemPedidoRequestDTO;
 import raizes.nordeste.dto.ItemPedidoResponseDTO;
+import raizes.nordeste.exception.BusinessException;
+import raizes.nordeste.exception.ResourceNotFoundException;
 import raizes.nordeste.model.ItemPedido;
 import raizes.nordeste.model.Produto;
 import raizes.nordeste.repository.ProdutoRepository;
@@ -19,10 +22,10 @@ public class ItemPedidoService {
     // Método auxiliar que o PedidoService usará para construir a lista de entidades
     public ItemPedido criarEntidadeItem(ItemPedidoRequestDTO dto) {
         Produto produto = produtoRepository.findById(dto.getProdutoId())
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado com o ID: " + dto.getProdutoId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com o ID: " + dto.getProdutoId()));
 
         if (!produto.isAtivo()) {
-            throw new IllegalStateException("O produto '" + produto.getDescricao() + "' não está disponível para venda.");
+            throw new BusinessException("O produto '" + produto.getDescricao() + "' não está disponível para venda.");
         }
 
         ItemPedido item = new ItemPedido();

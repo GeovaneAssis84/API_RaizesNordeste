@@ -3,8 +3,10 @@ package raizes.nordeste.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import raizes.nordeste.dto.UnidadeRequestDTO;
 import raizes.nordeste.dto.UnidadeResponseDTO;
+import raizes.nordeste.exception.ResourceNotFoundException;
 import raizes.nordeste.model.StatusUnidade;
 import raizes.nordeste.model.Unidade;
 import raizes.nordeste.repository.UnidadeRepository;
@@ -29,7 +31,7 @@ public class UnidadeService {
     @Transactional
     public void atualizarStatus(Long id, StatusUnidade novoStatus) {
         Unidade unidade = unidadeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Unidade não encontrada com o ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Unidade não encontrada com o ID: " + id));
         
         unidade.setStatus(novoStatus);
         

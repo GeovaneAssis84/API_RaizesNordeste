@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import raizes.nordeste.dto.EstoqueRequestDTO;
 import raizes.nordeste.dto.EstoqueResponseDTO;
+import raizes.nordeste.exception.BusinessException;
+import raizes.nordeste.exception.ResourceNotFoundException;
 import raizes.nordeste.model.Estoque;
 import raizes.nordeste.model.Produto;
 import raizes.nordeste.model.Unidade;
@@ -35,10 +37,10 @@ public class EstoqueService {
     public EstoqueResponseDTO salvarOuAtualizar(EstoqueRequestDTO request) {
         // Verifica se Unidade e Produto existem
     	Unidade unidade = unidadeRepository.findById(request.getUnidadeId())
-                .orElseThrow(() -> new RuntimeException("Unidade não encontrada com o ID: " + request.getUnidadeId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Unidade não encontrada com o ID: " + request.getUnidadeId()));
 
         Produto produto = produtoRepository.findById(request.getProdutoId())
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado com o ID: " + request.getProdutoId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Produto não encontrado com o ID: " + request.getProdutoId()));
 
         // Se já existir esse produto na loja, apenas atualiza a quantidade
         Estoque estoque = estoqueRepository.findByUnidadeIdAndProdutoId(request.getUnidadeId(), request.getProdutoId())
@@ -65,11 +67,11 @@ public class EstoqueService {
     public void baixarEstoque(Long unidadeId, Long produtoId, int quantidadeVendida) {
         //Busca o registro de estoque da loja e produto
         Estoque estoque = estoqueRepository.findByUnidadeIdAndProdutoId(unidadeId, produtoId)
-                .orElseThrow(() -> new RuntimeException("Estoque não encontrado para o produto " + produtoId + " na unidade " + unidadeId));
+                .orElseThrow(() -> new ResourceNotFoundException("Estoque não encontrado para o produto " + produtoId + " na unidade " + unidadeId));
 
         // Verifica se há estoque suficiente antes de vender
         if (estoque.getQuantidade() < quantidadeVendida) {
-            throw new IllegalStateException("Estoque insuficiente para o produto: " + estoque.getProduto().getDescricao() + 
+            throw new BusinessException("Estoque insuficiente para o produto: " + estoque.getProduto().getDescricao() + 
                                             ". Disponível: " + estoque.getQuantidade() + ", Solicitado: " + quantidadeVendida);
         }
 

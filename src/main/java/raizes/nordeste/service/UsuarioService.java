@@ -2,6 +2,7 @@ package raizes.nordeste.service;
 
 import raizes.nordeste.dto.UsuarioRequestDTO;
 import raizes.nordeste.dto.UsuarioResponseDTO;
+import raizes.nordeste.exception.ResourceNotFoundException;
 import raizes.nordeste.model.Usuario;
 import raizes.nordeste.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class UsuarioService {
     @Transactional(readOnly = true)
     public UsuarioResponseDTO buscarPorId(Long id) {
         Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com o ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com o ID: " + id));
         return converterParaResponseDTO(usuario);
     }
 

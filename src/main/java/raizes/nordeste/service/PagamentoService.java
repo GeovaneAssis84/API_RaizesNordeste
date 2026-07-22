@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import raizes.nordeste.dto.PagamentoRequestDTO;
 import raizes.nordeste.dto.PagamentoResponseDTO;
+import raizes.nordeste.exception.BusinessException;
+import raizes.nordeste.exception.ResourceNotFoundException;
 import raizes.nordeste.model.ItemPedido;
 import raizes.nordeste.model.Pagamento;
 import raizes.nordeste.model.Pedido;
@@ -34,11 +36,11 @@ public class PagamentoService {
     @Transactional
     public PagamentoResponseDTO iniciarPagamento(PagamentoRequestDTO request) {
         Pedido pedido = pedidoRepository.findById(request.getPedidoId())
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado com o ID: " + request.getPedidoId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado com o ID: " + request.getPedidoId()));
 
         // Só permite pagar se o pedido estiver CRIADO
         if (pedido.getStatus() != StatusPedido.CRIADO && pedido.getStatus()!= StatusPedido.AGUARDANDO_PAGAMENTO) {
-            throw new IllegalStateException("Este pedido não está disponível para iniciar pagamento. Status atual: " + pedido.getStatus());
+            throw new BusinessException("Este pedido não está disponível para iniciar pagamento. Status atual: " + pedido.getStatus());
         }
 
         Pagamento pagamento = new Pagamento();
@@ -56,10 +58,10 @@ public class PagamentoService {
     @Transactional
     public PagamentoResponseDTO confirmarPagamento(Long pagamentoId, boolean aprovado) {
         Pagamento pagamento = pagamentoRepository.findById(pagamentoId)
-                .orElseThrow(() -> new RuntimeException("Pagamento não encontrado com o ID: " + pagamentoId));
+                .orElseThrow(() -> new ResourceNotFoundException("Pagamento não encontrado com o ID: " + pagamentoId));
 
         if (pagamento.getStatusPag() != StatusPagamento.PENDENTE) {
-            throw new IllegalStateException("Este pagamento já foi processado anteriormente.");
+            throw new BusinessException("Este pagamento já foi processado anteriormente.");
         }
 
         Pedido pedido = pagamento.getPedido();
@@ -101,10 +103,10 @@ public class PagamentoService {
     @Transactional
     public PagamentoResponseDTO cancelarPagamento(Long pagamentoId) {
         Pagamento pagamento = pagamentoRepository.findById(pagamentoId)
-                .orElseThrow(() -> new RuntimeException("Pagamento não encontrado com o ID: " + pagamentoId));
+                .orElseThrow(() -> new ResourceNotFoundException("Pagamento não encontrado com o ID: " + pagamentoId));
 
         if (pagamento.getStatusPag() == StatusPagamento.CANCELADO) {
-            throw new IllegalStateException("Este pagamento já está cancelado.");
+            throw new BusinessException("Este pagamento já está cancelado.");
         }
 
         // Se o pagamento já estava aprovado e foi cancelado depois, devolvemos o estoque e cancelamos o pedido

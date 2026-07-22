@@ -7,6 +7,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import raizes.nordeste.dto.PedidoRequestDTO;
 import raizes.nordeste.dto.PedidoResponseDTO;
+import raizes.nordeste.exception.BusinessException;
+import raizes.nordeste.exception.ResourceNotFoundException;
 import raizes.nordeste.model.ItemPedido;
 import raizes.nordeste.model.Pedido;
 import raizes.nordeste.model.StatusPedido;
@@ -41,16 +43,16 @@ public class PedidoService {
     public PedidoResponseDTO criarPedido(PedidoRequestDTO request) {
         // Verifica se a unidade existe e se está ABERTA
         Unidade unidade = unidadeRepository.findById(request.getUnidadeId())
-                .orElseThrow(() -> new RuntimeException("Unidade não encontrada com o ID: " + request.getUnidadeId()));
+                .orElseThrow(() -> new ResourceNotFoundException("Unidade não encontrada com o ID: " + request.getUnidadeId()));
 
         if (unidade.getStatus() == StatusUnidade.FECHADA) {
-            throw new IllegalStateException("Não é possível realizar pedidos nesta unidade pois ela está FECHADA.");
+            throw new BusinessException("Não é possível realizar pedidos nesta unidade pois ela está FECHADA.");
             
 	    }
         
         // VALIDAÇÃO DO USUÁRIO
 	    Usuario usuario = usuarioRepository.findById(request.getUsuarioId())
-	            .orElseThrow(() -> new RuntimeException("Usuário não encontrado com o ID: " + request.getUsuarioId()));
+	            .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com o ID: " + request.getUsuarioId()));
 
         // Pedido com os dados básicos
         Pedido pedido = new Pedido();
@@ -107,13 +109,13 @@ public class PedidoService {
     @Transactional
     public PedidoResponseDTO cancelarPedido(Long id) {
         Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado com o ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado com o ID: " + id));
 
         // Não pode cancelar se já estiver em produção, pronto ou entregue
         if (pedido.getStatus() == StatusPedido.EM_PRODUCAO || 
             pedido.getStatus() == StatusPedido.PRONTO || 
             pedido.getStatus() == StatusPedido.ENTREGUE) {
-            throw new IllegalStateException("Não é possível cancelar um pedido que já está " + pedido.getStatus());
+            throw new BusinessException("Não é possível cancelar um pedido que já está " + pedido.getStatus());
         }
 
         pedido.setStatus(StatusPedido.CANCELADO);
@@ -123,7 +125,7 @@ public class PedidoService {
     @Transactional
     public PedidoResponseDTO atualizarStatus(Long id, StatusPedido novoStatus) {
         Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Pedido não encontrado com o ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado com o ID: " + id));
 
         // Não pode pular etapa
         validarTransicaoStatus(pedido.getStatus(), novoStatus);
@@ -146,13 +148,13 @@ public class PedidoService {
         };
 
         if (!transicaoValida) {
-            throw new IllegalStateException("Transição de status inválida: Não é permitido mudar de " + atual + " para " + proximo);
+            throw new BusinessException("Transição de status inválida: Não é permitido mudar de " + atual + " para " + proximo);
         }
     }
 
 	public PedidoResponseDTO consultarPedido(Long id) {
 	       Pedido pedido = pedidoRepository.findById(id)
-	                .orElseThrow(() -> new RuntimeException("Pedido não encontrado com o ID: " + id));
+	                .orElseThrow(() -> new ResourceNotFoundException("Pedido não encontrado com o ID: " + id));
 
 		return converterParaResponseDTO(pedido);
 	}
