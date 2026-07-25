@@ -7,6 +7,8 @@ import raizes.nordeste.exception.ErrorResponse;
 import raizes.nordeste.model.StatusPedido;
 import raizes.nordeste.service.PedidoService;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -139,6 +141,38 @@ public class PedidoController {
         return ResponseEntity.ok(pedidoService.atualizarStatus(id, novoStatus));
     }
 
+    @ApiResponses({
+        @ApiResponse(
+            responseCode = "200",
+            description = "Pedidos da unidade listados com sucesso"
+        ),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Unidade não encontrada",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class)
+            )
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno do servidor",
+            content = @Content(
+                schema = @Schema(implementation = ErrorResponse.class)
+            )
+        )
+    })
+    @Operation(
+        summary = "Listar pedidos por unidade",
+        description = "Lista todos os pedidos associados a uma unidade."
+    )
+    @GetMapping("/unidade/{unidadeId}")
+    public ResponseEntity<List<PedidoResponseDTO>> listarPorUnidade(
+            @PathVariable Long unidadeId) {
+
+        return ResponseEntity.ok(
+                pedidoService.listarPorUnidade(unidadeId)
+        );
+    }
 
     
 }

@@ -158,5 +158,16 @@ public class PedidoService {
 
 		return converterParaResponseDTO(pedido);
 	}
+	
+	@Transactional
+	public List<PedidoResponseDTO> listarPorUnidade(Long unidadeId) {
+
+	    unidadeRepository.findById(unidadeId)
+	            .orElseThrow(() -> new ResourceNotFoundException(
+	                    "Unidade não encontrada com o ID: " + unidadeId
+	            ));
+
+	    return pedidoRepository.findByUnidadeId(unidadeId).stream().map(this::converterParaResponseDTO).toList();
+	}
     
 }

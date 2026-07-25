@@ -96,5 +96,5 @@ public class EstoqueService {
     		dadosCardapio.put("quantidadeDisponivel",estoque.getQuantidade());
             return dadosCardapio;
     	}).collect(Collectors.toList());
-    }	
+    }	   
 }
