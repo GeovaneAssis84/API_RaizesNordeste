@@ -1,5 +1,6 @@
 package raizes.nordeste.controller;
 import raizes.nordeste.dto.*;
+import raizes.nordeste.exception.ErrorResponse;
 
 import java.util.List;
 
@@ -13,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import raizes.nordeste.service.ProdutoService;
@@ -25,6 +30,19 @@ public class ProdutoController {
 	@Autowired
 	private ProdutoService produtoService;
 	
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Produto cadastrado com sucesso"),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Dados inválidos na requisição",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno do servidor",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        )
+    })
     @Operation(
             summary = "Cadastrar Produto",
             description = "Realiza o cadastro de um novo produto."
@@ -35,6 +53,14 @@ public class ProdutoController {
 		return new ResponseEntity<>(novoProduto, HttpStatus.CREATED);
 	}
 
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Produtos listados com sucesso"),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno do servidor",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        )
+    })
     @Operation(
             summary = "Listar Produtos",
             description = "Solicita a lista de todos produtos."

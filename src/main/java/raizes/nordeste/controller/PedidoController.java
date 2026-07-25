@@ -26,6 +26,19 @@ public class PedidoController {
     @Autowired
     private PedidoService pedidoService;
 
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Pedido cadastrado com sucesso"),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Dados inválidos na requisição",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno do servidor",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        )
+    })
     @Operation(
             summary = "Cria um novo pedido",
             description = "Cria um novo pedido."
@@ -36,6 +49,19 @@ public class PedidoController {
         return ResponseEntity.ok(response);
     }
     
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Pedido cancelado com sucesso"),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Peido não encontrado",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno do servidor",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        )
+    })
     @Operation(
             summary = "Cancelar um pedido",
             description = "Cancela um pedido escolhido pelo Id"

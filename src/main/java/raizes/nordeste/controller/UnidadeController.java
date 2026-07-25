@@ -12,6 +12,11 @@ import raizes.nordeste.dto.UnidadeResponseDTO;
 import raizes.nordeste.model.StatusUnidade;
 import raizes.nordeste.service.UnidadeService;
 import java.util.List;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import raizes.nordeste.exception.ErrorResponse;
 
 @RestController
 @RequestMapping("/unidades")
@@ -21,16 +26,38 @@ public class UnidadeController {
     @Autowired
     private UnidadeService unidadeService;
 
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Unidade cadastrada com sucesso"),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Dados inválidos na requisição",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno do servidor",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        )
+    })
     @Operation(
             summary = "Cadastrar Unidade",
             description = "Realiza o cadastro de uma nova Unidade."
         )
     @PostMapping
-    public ResponseEntity<UnidadeResponseDTO> cadastrar( @RequestBody UnidadeRequestDTO request) {
+    public ResponseEntity<UnidadeResponseDTO> cadastrar(@Valid @RequestBody UnidadeRequestDTO request) {
         UnidadeResponseDTO response = unidadeService.cadastrar(request);
         return ResponseEntity.ok(response);
     }
 
+    
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Unidades listadas com sucesso"),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno do servidor",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        )
+    })
     @Operation(
             summary = "Listar todas Unidades",
             description = "Solicita Lista das Unidades."
@@ -40,6 +67,24 @@ public class UnidadeController {
         return ResponseEntity.ok(unidadeService.listarTodas());
     }
 
+    @ApiResponses({
+        @ApiResponse(responseCode = "204", description = "Status da unidade alterado com sucesso"),
+        @ApiResponse(
+            responseCode = "404",
+            description = "Unidade não encontrada",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "400",
+            description = "Status informado é inválido",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        ),
+        @ApiResponse(
+            responseCode = "500",
+            description = "Erro interno do servidor",
+            content = @Content(schema = @Schema(implementation = ErrorResponse.class))
+        )
+    })
     @Operation(
             summary = "Alterar o o Status da Unidade",
             description = "Alterar o status (Aberta/Fechada) pelo Id da Unidade."
