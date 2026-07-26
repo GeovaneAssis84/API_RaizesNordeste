@@ -8,6 +8,7 @@ import raizes.nordeste.model.TipoUsuario;
 public class UsuarioResponseDTO {
     private Long id;
     private String nome;
+    private String email;
     private TipoUsuario tipoUsuario;
     private boolean participaFidelidade;
     private StatusLogin statusLogin;
