@@ -16,10 +16,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import raizes.nordeste.exception.ErrorResponse;
 
 @RestController
 @RequestMapping("/unidades")
+@SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Unidades", description = "Operações relacionadas ao gerenciamento das Unidades(Lojas)")
 public class UnidadeController {
 

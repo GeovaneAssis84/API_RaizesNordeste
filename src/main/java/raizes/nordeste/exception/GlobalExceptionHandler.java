@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -68,6 +69,19 @@ public class GlobalExceptionHandler {
         return buildResponse(
                 HttpStatus.BAD_REQUEST,
                 "JSON inválido ou valor informado incompatível com o campo.",
+                request.getRequestURI(),
+                Collections.emptyList()
+        );
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorResponse> handleAuthentication(
+            AuthenticationException exception,
+            HttpServletRequest request) {
+
+        return buildResponse(
+                HttpStatus.UNAUTHORIZED,
+                "E-mail ou senha inválidos.",
                 request.getRequestURI(),
                 Collections.emptyList()
         );

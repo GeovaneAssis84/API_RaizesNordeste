@@ -21,6 +21,4 @@ public class PedidoRequestDTO {
     @NotNull(message = "A plataforma/canal de compra é obrigatória.")
     private CanalCompra plataforma;
     
-    @NotNull(message = "O ID do usuário (Cliente/Toten/Funcionário) é obrigatório.")
-    private Long usuarioId;
 }

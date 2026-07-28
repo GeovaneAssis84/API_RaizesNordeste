@@ -11,10 +11,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -22,6 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/pedidos")
+@SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Pedidos", description = "Operações relacionadas ao gerenciamento dos pedidos")
 public class PedidoController {
 
@@ -46,8 +49,10 @@ public class PedidoController {
             description = "Cria um novo pedido."
         )
     @PostMapping
-    public ResponseEntity<PedidoResponseDTO> criar(@Valid @RequestBody PedidoRequestDTO request) {
-        PedidoResponseDTO response = pedidoService.criarPedido(request);
+    public ResponseEntity<PedidoResponseDTO> criar(
+            @Valid @RequestBody PedidoRequestDTO request,
+            Authentication authentication) {
+        PedidoResponseDTO response = pedidoService.criarPedido(request, authentication.getName());
         return ResponseEntity.ok(response);
     }
     

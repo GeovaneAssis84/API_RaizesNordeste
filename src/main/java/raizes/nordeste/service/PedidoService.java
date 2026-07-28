@@ -40,7 +40,7 @@ public class PedidoService {
     private ItemPedidoService itemPedidoService;
 
     @Transactional
-    public PedidoResponseDTO criarPedido(PedidoRequestDTO request) {
+    public PedidoResponseDTO criarPedido(PedidoRequestDTO request, String emailUsuarioAutenticado) {
         // Verifica se a unidade existe e se está ABERTA
         Unidade unidade = unidadeRepository.findById(request.getUnidadeId())
                 .orElseThrow(() -> new ResourceNotFoundException("Unidade não encontrada com o ID: " + request.getUnidadeId()));
@@ -51,8 +51,8 @@ public class PedidoService {
 	    }
         
         // VALIDAÇÃO DO USUÁRIO
-	    Usuario usuario = usuarioRepository.findById(request.getUsuarioId())
-	            .orElseThrow(() -> new ResourceNotFoundException("Usuário não encontrado com o ID: " + request.getUsuarioId()));
+	    Usuario usuario = usuarioRepository.findByEmail(emailUsuarioAutenticado)
+	            .orElseThrow(() -> new ResourceNotFoundException("Usuário autenticado não encontrado."));
 
         // Pedido com os dados básicos
         Pedido pedido = new Pedido();
