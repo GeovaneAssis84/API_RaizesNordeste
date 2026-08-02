@@ -1,0 +1,1000 @@
+{
+  "info": {
+    "_postman_id": "b2f1a5e1-1c5f-418f-92c4-2bf8c1f797cf",
+    "name": "Raizes_API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55955233",
+    "_collection_link": "https://go.postman.co/collection/55955233-b2f1a5e1-1c5f-418f-92c4-2bf8c1f797cf?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Login Funcionario",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Login de funcionário realizado\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"tokenFuncionario\",\r",
+              "    pm.response.json().accessToken\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"abc@email.com\",\r\n  \"senha\": \"123456\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url_base}}/auth/login",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login Cliente NEGATIVO",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Cenário Negativo: Deve retornar 401 para senha inválida\", function () { pm.response.to.have.status(401); });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"cliente@email.com\",\r\n  \"senha\": \"12345\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url_base}}/auth/login",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login Cliente",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Login de cliente realizado\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.environment.set(\r",
+              "    \"tokenCliente\",\r",
+              "    pm.response.json().accessToken\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"email\": \"cliente@email.com\",\r\n  \"senha\": \"123456\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url_base}}/auth/login",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Produtos Listar NEGATIVO",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Cenário Negativo: Deve retornar 401 concultar Produtos com token inválido\", function () { pm.response.to.have.status(401); });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\r",
+              "    \"tokenAtivo\",\r",
+              "    pm.environment.get(\"tokenCliente\")\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url_base}}/produtos",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "produtos"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Unidades Cadastrar",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "\r",
+              "\r",
+              "var unidade = pm.response.json();\r",
+              "pm.environment.set(\"unidadeId\", unidade.id);\r",
+              "pm.test(\"Status é 200/201 e Id= \" + unidade.id, function () { pm.response.to.have.status(200); });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\r",
+              "    \"tokenAtivo\",\r",
+              "    pm.environment.get(\"tokenFuncionario\")\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"endereco\": \"Salvador\",\r\n  \"status\": \"ABERTA\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url_base}}/unidades",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "unidades"
+          ]
+        },
+        "description": "## Cadastrar Unidade\n\nCria uma nova unidade no sistema.\n\n**Método:** `POST`  \n**Endpoint:** `{{url_base}}/unidades`\n\n---\n\n### Request Body\n\nO corpo da requisição deve ser enviado em formato JSON com os seguintes campos:\n\n| Campo | Tipo | Obrigatório | Descrição |\n| --- | --- | --- | --- |\n| `descricao` | string | Sim | Nome ou descrição da unidade |\n\n| `status` | boolean | Sim | Indica se a unidade está aberta |\n\n**Exemplo de corpo:**\n\n``` json\n{\n  \"endereco\": \"Salvador\",\n  \"status\": \"ABERTA\"\n}\n\n ```\n\n---\n\n### Respostas\n\n| Status | Descrição |\n| --- | --- |\n| `201` | Unidade criada com sucesso |\n| `400` | Dados inválidos ou campos obrigatórios ausentes |\n| `500` | Erro interno do servidor |"
+      },
+      "response": []
+    },
+    {
+      "name": "Produtos Cadastrar",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status é 201\", function () { pm.response.to.have.status(201); });\r",
+              "\r",
+              "var produto = pm.response.json();\r",
+              "pm.environment.set(\"produtoId\", produto.id);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\r",
+              "    \"tokenAtivo\",\r",
+              "    pm.environment.get(\"tokenFuncionario\")\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"descricao\": \"Baião de Dois\",\r\n    \"preco\": 30.00,\r\n    \"ativo\": true\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url_base}}/produtos",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "produtos"
+          ]
+        },
+        "description": "## Cadastrar Produto\n\nEndpoint responsável por **cadastrar um novo produto** no sistema. Ao enviar os dados do produto no corpo da requisição, o sistema cria o registro e retorna o objeto criado com o identificador gerado automaticamente.\n\n---\n\n### Método e URL\n\n```\nPOST {{url_base}}/produtos\n\n ```\n\n---\n\n### Corpo da Requisição (Body)\n\nO corpo deve ser enviado no formato **JSON** (`application/json`).\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `descricao` | `string` | Nome ou descrição do produto (ex: \"Refrigerante\") |\n| `preco` | `number` | Preço do produto em formato decimal (ex: `8.00`) |\n| `ativo` | `boolean` | Indica se o produto está ativo (`true`) ou inativo (`false`) |\n\n**Exemplo de corpo:**\n\n``` json\n{\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n---\n\n### Resposta\n\n#### ✅ 201 Created\n\nProduto cadastrado com sucesso. O corpo da resposta retorna o objeto do produto criado, incluindo o `id` gerado automaticamente.\n\n``` json\n{\n    \"id\": 1,\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | `integer` | Identificador único gerado pelo sistema |\n| `descricao` | `string` | Descrição do produto cadastrado |\n| `preco` | `number` | Preço do produto |\n| `ativo` | `boolean` | Status de ativação do produto |"
+      },
+      "response": []
+    },
+    {
+      "name": "Produtos Cadastrar NEGATIVO",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Cenário Negativo: Deve retornar 400 para valor e produto inválio\", function () { pm.response.to.have.status(400); });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\r",
+              "    \"tokenAtivo\",\r",
+              "    pm.environment.get(\"tokenFuncionario\")\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"descricao\": \"Baião de Dois\",\r\n    \"preco\": 0.00,\r\n    \"ativo\": true\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url_base}}/produtos",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "produtos"
+          ]
+        },
+        "description": "## Cadastrar Produto\n\nEndpoint responsável por **cadastrar um novo produto** no sistema. Ao enviar os dados do produto no corpo da requisição, o sistema cria o registro e retorna o objeto criado com o identificador gerado automaticamente.\n\n---\n\n### Método e URL\n\n```\nPOST {{url_base}}/produtos\n\n ```\n\n---\n\n### Corpo da Requisição (Body)\n\nO corpo deve ser enviado no formato **JSON** (`application/json`).\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `descricao` | `string` | Nome ou descrição do produto (ex: \"Refrigerante\") |\n| `preco` | `number` | Preço do produto em formato decimal (ex: `8.00`) |\n| `ativo` | `boolean` | Indica se o produto está ativo (`true`) ou inativo (`false`) |\n\n**Exemplo de corpo:**\n\n``` json\n{\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n---\n\n### Resposta\n\n#### ✅ 201 Created\n\nProduto cadastrado com sucesso. O corpo da resposta retorna o objeto do produto criado, incluindo o `id` gerado automaticamente.\n\n``` json\n{\n    \"id\": 1,\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | `integer` | Identificador único gerado pelo sistema |\n| `descricao` | `string` | Descrição do produto cadastrado |\n| `preco` | `number` | Preço do produto |\n| `ativo` | `boolean` | Status de ativação do produto |"
+      },
+      "response": []
+    },
+    {
+      "name": "Estoque Incluir",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status é 200/201\", function () { pm.response.to.have.status(200); });\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{tokenAtivo}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"unidadeId\": {{unidadeId}},\r\n  \"produtoId\": {{produtoId}},\r\n  \"quantidade\": 10\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url_base}}/estoques",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "estoques"
+          ]
+        },
+        "description": "## Cadastrar Produto\n\nEndpoint responsável por **cadastrar um novo produto** no sistema. Ao enviar os dados do produto no corpo da requisição, o sistema cria o registro e retorna o objeto criado com o identificador gerado automaticamente.\n\n---\n\n### Método e URL\n\n```\nPOST {{url_base}}/produtos\n\n ```\n\n---\n\n### Corpo da Requisição (Body)\n\nO corpo deve ser enviado no formato **JSON** (`application/json`).\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `descricao` | `string` | Nome ou descrição do produto (ex: \"Refrigerante\") |\n| `preco` | `number` | Preço do produto em formato decimal (ex: `8.00`) |\n| `ativo` | `boolean` | Indica se o produto está ativo (`true`) ou inativo (`false`) |\n\n**Exemplo de corpo:**\n\n``` json\n{\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n---\n\n### Resposta\n\n#### ✅ 201 Created\n\nProduto cadastrado com sucesso. O corpo da resposta retorna o objeto do produto criado, incluindo o `id` gerado automaticamente.\n\n``` json\n{\n    \"id\": 1,\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | `integer` | Identificador único gerado pelo sistema |\n| `descricao` | `string` | Descrição do produto cadastrado |\n| `preco` | `number` | Preço do produto |\n| `ativo` | `boolean` | Status de ativação do produto |"
+      },
+      "response": []
+    },
+    {
+      "name": "Estoque Atualizar NEGATIVO",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Cenário Negativo: Deve retornar 404 para produto inválido\", function () { pm.response.to.have.status(404); });\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "{{tokenAtivo}}",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"unidadeId\": 1,\r\n  \"produtoId\": 200,\r\n  \"quantidade\": 10\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url_base}}/estoques",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "estoques"
+          ]
+        },
+        "description": "## Cadastrar Produto\n\nEndpoint responsável por **cadastrar um novo produto** no sistema. Ao enviar os dados do produto no corpo da requisição, o sistema cria o registro e retorna o objeto criado com o identificador gerado automaticamente.\n\n---\n\n### Método e URL\n\n```\nPOST {{url_base}}/produtos\n\n ```\n\n---\n\n### Corpo da Requisição (Body)\n\nO corpo deve ser enviado no formato **JSON** (`application/json`).\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `descricao` | `string` | Nome ou descrição do produto (ex: \"Refrigerante\") |\n| `preco` | `number` | Preço do produto em formato decimal (ex: `8.00`) |\n| `ativo` | `boolean` | Indica se o produto está ativo (`true`) ou inativo (`false`) |\n\n**Exemplo de corpo:**\n\n``` json\n{\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n---\n\n### Resposta\n\n#### ✅ 201 Created\n\nProduto cadastrado com sucesso. O corpo da resposta retorna o objeto do produto criado, incluindo o `id` gerado automaticamente.\n\n``` json\n{\n    \"id\": 1,\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | `integer` | Identificador único gerado pelo sistema |\n| `descricao` | `string` | Descrição do produto cadastrado |\n| `preco` | `number` | Preço do produto |\n| `ativo` | `boolean` | Status de ativação do produto |"
+      },
+      "response": []
+    },
+    {
+      "name": "Pedido Criar NEGATIVO",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Cenário Negativo: Deve retornar 400 para pedido sem itens\", function () { pm.response.to.have.status(400); });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\r",
+              "    \"tokenAtivo\",\r",
+              "    pm.environment.get(\"tokenCliente\")\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"unidadeId\": {{unidadeId}},\r\n  \"itens\": [\r\n    {\r\n      \r\n    }\r\n  ],\r\n  \"plataforma\": \"APLICATIVO\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url_base}}/pedidos",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "pedidos"
+          ]
+        },
+        "description": "## Cadastrar Produto\n\nEndpoint responsável por **cadastrar um novo produto** no sistema. Ao enviar os dados do produto no corpo da requisição, o sistema cria o registro e retorna o objeto criado com o identificador gerado automaticamente.\n\n---\n\n### Método e URL\n\n```\nPOST {{url_base}}/produtos\n\n ```\n\n---\n\n### Corpo da Requisição (Body)\n\nO corpo deve ser enviado no formato **JSON** (`application/json`).\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `descricao` | `string` | Nome ou descrição do produto (ex: \"Refrigerante\") |\n| `preco` | `number` | Preço do produto em formato decimal (ex: `8.00`) |\n| `ativo` | `boolean` | Indica se o produto está ativo (`true`) ou inativo (`false`) |\n\n**Exemplo de corpo:**\n\n``` json\n{\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n---\n\n### Resposta\n\n#### ✅ 201 Created\n\nProduto cadastrado com sucesso. O corpo da resposta retorna o objeto do produto criado, incluindo o `id` gerado automaticamente.\n\n``` json\n{\n    \"id\": 1,\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | `integer` | Identificador único gerado pelo sistema |\n| `descricao` | `string` | Descrição do produto cadastrado |\n| `preco` | `number` | Preço do produto |\n| `ativo` | `boolean` | Status de ativação do produto |"
+      },
+      "response": []
+    },
+    {
+      "name": "Pedido Criar",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Retorno esperado de Status é 200\", function () { pm.response.to.have.status(200); });\r",
+              "\r",
+              "var pedido = pm.response.json();\r",
+              "pm.environment.set(\"pedidoId\", pedido.id);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\r",
+              "    \"tokenAtivo\",\r",
+              "    pm.environment.get(\"tokenCliente\")\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"unidadeId\": {{unidadeId}},\r\n  \"itens\": [\r\n    {\r\n      \"produtoId\": {{produtoId}},\r\n      \"quantidade\": 3\r\n    }\r\n  ],\r\n  \"plataforma\": \"APLICATIVO\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url_base}}/pedidos",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "pedidos"
+          ]
+        },
+        "description": "## Cadastrar Produto\n\nEndpoint responsável por **cadastrar um novo produto** no sistema. Ao enviar os dados do produto no corpo da requisição, o sistema cria o registro e retorna o objeto criado com o identificador gerado automaticamente.\n\n---\n\n### Método e URL\n\n```\nPOST {{url_base}}/produtos\n\n ```\n\n---\n\n### Corpo da Requisição (Body)\n\nO corpo deve ser enviado no formato **JSON** (`application/json`).\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `descricao` | `string` | Nome ou descrição do produto (ex: \"Refrigerante\") |\n| `preco` | `number` | Preço do produto em formato decimal (ex: `8.00`) |\n| `ativo` | `boolean` | Indica se o produto está ativo (`true`) ou inativo (`false`) |\n\n**Exemplo de corpo:**\n\n``` json\n{\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n---\n\n### Resposta\n\n#### ✅ 201 Created\n\nProduto cadastrado com sucesso. O corpo da resposta retorna o objeto do produto criado, incluindo o `id` gerado automaticamente.\n\n``` json\n{\n    \"id\": 1,\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | `integer` | Identificador único gerado pelo sistema |\n| `descricao` | `string` | Descrição do produto cadastrado |\n| `preco` | `number` | Preço do produto |\n| `ativo` | `boolean` | Status de ativação do produto |"
+      },
+      "response": []
+    },
+    {
+      "name": "Pagamento iniciar",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Retorno esperado de Status é 200\", function () { pm.response.to.have.status(200); });\r",
+              "\r",
+              "var pagamento = pm.response.json();\r",
+              "pm.environment.set(\"pagamentoId\", pagamento.id);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\r",
+              "    \"tokenAtivo\",\r",
+              "    pm.environment.get(\"tokenCliente\")\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"pedidoId\": {{pedidoId}},\r\n  \"tipoPag\": \"PIX\"\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url_base}}/pagamentos",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "pagamentos"
+          ]
+        },
+        "description": "## Cadastrar Produto\n\nEndpoint responsável por **cadastrar um novo produto** no sistema. Ao enviar os dados do produto no corpo da requisição, o sistema cria o registro e retorna o objeto criado com o identificador gerado automaticamente.\n\n---\n\n### Método e URL\n\n```\nPOST {{url_base}}/produtos\n\n ```\n\n---\n\n### Corpo da Requisição (Body)\n\nO corpo deve ser enviado no formato **JSON** (`application/json`).\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `descricao` | `string` | Nome ou descrição do produto (ex: \"Refrigerante\") |\n| `preco` | `number` | Preço do produto em formato decimal (ex: `8.00`) |\n| `ativo` | `boolean` | Indica se o produto está ativo (`true`) ou inativo (`false`) |\n\n**Exemplo de corpo:**\n\n``` json\n{\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n---\n\n### Resposta\n\n#### ✅ 201 Created\n\nProduto cadastrado com sucesso. O corpo da resposta retorna o objeto do produto criado, incluindo o `id` gerado automaticamente.\n\n``` json\n{\n    \"id\": 1,\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | `integer` | Identificador único gerado pelo sistema |\n| `descricao` | `string` | Descrição do produto cadastrado |\n| `preco` | `number` | Preço do produto |\n| `ativo` | `boolean` | Status de ativação do produto |"
+      },
+      "response": []
+    },
+    {
+      "name": "Pagamento aprovar TRUE",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Retorno esperado de Status é 200\", function () { pm.response.to.have.status(200); });\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\r",
+              "    \"tokenAtivo\",\r",
+              "    pm.environment.get(\"tokenFuncionario\")\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "{{url_base}}/pagamentos/{{pagamentoId}}/processar?aprovado=true",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "pagamentos",
+            "{{pagamentoId}}",
+            "processar"
+          ],
+          "query": [
+            {
+              "key": "aprovado",
+              "value": "true"
+            }
+          ]
+        },
+        "description": "## Cadastrar Produto\n\nEndpoint responsável por **cadastrar um novo produto** no sistema. Ao enviar os dados do produto no corpo da requisição, o sistema cria o registro e retorna o objeto criado com o identificador gerado automaticamente.\n\n---\n\n### Método e URL\n\n```\nPOST {{url_base}}/produtos\n\n ```\n\n---\n\n### Corpo da Requisição (Body)\n\nO corpo deve ser enviado no formato **JSON** (`application/json`).\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `descricao` | `string` | Nome ou descrição do produto (ex: \"Refrigerante\") |\n| `preco` | `number` | Preço do produto em formato decimal (ex: `8.00`) |\n| `ativo` | `boolean` | Indica se o produto está ativo (`true`) ou inativo (`false`) |\n\n**Exemplo de corpo:**\n\n``` json\n{\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n---\n\n### Resposta\n\n#### ✅ 201 Created\n\nProduto cadastrado com sucesso. O corpo da resposta retorna o objeto do produto criado, incluindo o `id` gerado automaticamente.\n\n``` json\n{\n    \"id\": 1,\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | `integer` | Identificador único gerado pelo sistema |\n| `descricao` | `string` | Descrição do produto cadastrado |\n| `preco` | `number` | Preço do produto |\n| `ativo` | `boolean` | Status de ativação do produto |"
+      },
+      "response": []
+    },
+    {
+      "name": "Estoque Consulta Item Baixado",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Consulta de estoque realizada\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "const estoques = pm.response.json();\r",
+              "\r",
+              "const produto = estoques.find(\r",
+              "    item => item.produtoId === Number(pm.environment.get(\"produtoId\"))\r",
+              ");\r",
+              "\r",
+              "pm.test(\"Produto consta no estoque\", function () {\r",
+              "    pm.expect(produto).to.exist;\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Estoque foi reduzido para 7 unidades\", function () {\r",
+              "    pm.expect(produto.quantidadeDisponivel).to.eql(7);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url_base}}/estoques/unidade/{{unidadeId}}",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "estoques",
+            "unidade",
+            "{{unidadeId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Pagamento Repetido NEGATIVO",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Cenário Negativo: Deve retornar 409 para pagamento repetido\", function () { pm.response.to.have.status(409); });\r",
+              "\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "{{url_base}}/pagamentos/{{pagamentoId}}/processar?aprovado=true",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "pagamentos",
+            "{{pagamentoId}}",
+            "processar"
+          ],
+          "query": [
+            {
+              "key": "aprovado",
+              "value": "true"
+            }
+          ]
+        },
+        "description": "## Cadastrar Produto\n\nEndpoint responsável por **cadastrar um novo produto** no sistema. Ao enviar os dados do produto no corpo da requisição, o sistema cria o registro e retorna o objeto criado com o identificador gerado automaticamente.\n\n---\n\n### Método e URL\n\n```\nPOST {{url_base}}/produtos\n\n ```\n\n---\n\n### Corpo da Requisição (Body)\n\nO corpo deve ser enviado no formato **JSON** (`application/json`).\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `descricao` | `string` | Nome ou descrição do produto (ex: \"Refrigerante\") |\n| `preco` | `number` | Preço do produto em formato decimal (ex: `8.00`) |\n| `ativo` | `boolean` | Indica se o produto está ativo (`true`) ou inativo (`false`) |\n\n**Exemplo de corpo:**\n\n``` json\n{\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n---\n\n### Resposta\n\n#### ✅ 201 Created\n\nProduto cadastrado com sucesso. O corpo da resposta retorna o objeto do produto criado, incluindo o `id` gerado automaticamente.\n\n``` json\n{\n    \"id\": 1,\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | `integer` | Identificador único gerado pelo sistema |\n| `descricao` | `string` | Descrição do produto cadastrado |\n| `preco` | `number` | Preço do produto |\n| `ativo` | `boolean` | Status de ativação do produto |"
+      },
+      "response": []
+    },
+    {
+      "name": "Pedido Alterar Status NEGATIVO",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Cenário Negativo: Deve retornar 403 - alteração somente por funcionário\", function () { pm.response.to.have.status(403); });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\r",
+              "    \"tokenAtivo\",\r",
+              "    pm.environment.get(\"tokenCliente\")\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "{{url_base}}/pedidos/{{pedidoId}}/status?novoStatus=EM_PRODUCAO",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "pedidos",
+            "{{pedidoId}}",
+            "status"
+          ],
+          "query": [
+            {
+              "key": "novoStatus",
+              "value": "EM_PRODUCAO"
+            }
+          ]
+        },
+        "description": "## Cadastrar Produto\n\nEndpoint responsável por **cadastrar um novo produto** no sistema. Ao enviar os dados do produto no corpo da requisição, o sistema cria o registro e retorna o objeto criado com o identificador gerado automaticamente.\n\n---\n\n### Método e URL\n\n```\nPOST {{url_base}}/produtos\n\n ```\n\n---\n\n### Corpo da Requisição (Body)\n\nO corpo deve ser enviado no formato **JSON** (`application/json`).\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `descricao` | `string` | Nome ou descrição do produto (ex: \"Refrigerante\") |\n| `preco` | `number` | Preço do produto em formato decimal (ex: `8.00`) |\n| `ativo` | `boolean` | Indica se o produto está ativo (`true`) ou inativo (`false`) |\n\n**Exemplo de corpo:**\n\n``` json\n{\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n---\n\n### Resposta\n\n#### ✅ 201 Created\n\nProduto cadastrado com sucesso. O corpo da resposta retorna o objeto do produto criado, incluindo o `id` gerado automaticamente.\n\n``` json\n{\n    \"id\": 1,\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | `integer` | Identificador único gerado pelo sistema |\n| `descricao` | `string` | Descrição do produto cadastrado |\n| `preco` | `number` | Preço do produto |\n| `ativo` | `boolean` | Status de ativação do produto |"
+      },
+      "response": []
+    },
+    {
+      "name": "Pedido Alterar Status",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status do pedido atualizado\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "pm.environment.set(\r",
+              "    \"tokenAtivo\",\r",
+              "    pm.environment.get(\"tokenFuncionario\")\r",
+              ");"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "url": {
+          "raw": "{{url_base}}/pedidos/{{pedidoId}}/status?novoStatus=EM_PRODUCAO",
+          "host": [
+            "{{url_base}}"
+          ],
+          "path": [
+            "pedidos",
+            "{{pedidoId}}",
+            "status"
+          ],
+          "query": [
+            {
+              "key": "novoStatus",
+              "value": "EM_PRODUCAO"
+            }
+          ]
+        },
+        "description": "## Cadastrar Produto\n\nEndpoint responsável por **cadastrar um novo produto** no sistema. Ao enviar os dados do produto no corpo da requisição, o sistema cria o registro e retorna o objeto criado com o identificador gerado automaticamente.\n\n---\n\n### Método e URL\n\n```\nPOST {{url_base}}/produtos\n\n ```\n\n---\n\n### Corpo da Requisição (Body)\n\nO corpo deve ser enviado no formato **JSON** (`application/json`).\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `descricao` | `string` | Nome ou descrição do produto (ex: \"Refrigerante\") |\n| `preco` | `number` | Preço do produto em formato decimal (ex: `8.00`) |\n| `ativo` | `boolean` | Indica se o produto está ativo (`true`) ou inativo (`false`) |\n\n**Exemplo de corpo:**\n\n``` json\n{\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n---\n\n### Resposta\n\n#### ✅ 201 Created\n\nProduto cadastrado com sucesso. O corpo da resposta retorna o objeto do produto criado, incluindo o `id` gerado automaticamente.\n\n``` json\n{\n    \"id\": 1,\n    \"descricao\": \"Refrigerante\",\n    \"preco\": 8.00,\n    \"ativo\": true\n}\n\n ```\n\n| Campo | Tipo | Descrição |\n| --- | --- | --- |\n| `id` | `integer` | Identificador único gerado pelo sistema |\n| `descricao` | `string` | Descrição do produto cadastrado |\n| `preco` | `number` | Preço do produto |\n| `ativo` | `boolean` | Status de ativação do produto |"
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{tokenAtivo}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "url_base",
+      "value": ""
+    },
+    {
+      "key": "tokenFuncionario",
+      "value": ""
+    },
+    {
+      "key": "tokenCliente",
+      "value": ""
+    },
+    {
+      "key": "tokenAtivo",
+      "value": ""
+    },
+    {
+      "key": "unidadeId",
+      "value": ""
+    },
+    {
+      "key": "produtoId",
+      "value": ""
+    },
+    {
+      "key": "clienteId",
+      "value": ""
+    },
+    {
+      "key": "pedidoId",
+      "value": ""
+    },
+    {
+      "key": "pagamentoId",
+      "value": ""
+    }
+  ]
+}
