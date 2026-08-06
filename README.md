@@ -13,6 +13,16 @@ O projeto permite o gerenciamento de usuários, unidades, produtos, estoque, ped
 - Maven;
 - Dependências gerenciadas pelo Maven.
 
+
+## Obter o projeto
+
+Clone o repositório e acesse a pasta do projeto:
+
+```powershell
+git clone https://github.com/GeovaneAssis84/API_RaizesNordeste.git
+cd API_RaizesNordeste
+```
+
 ### Configuração
 
 Abra o arquivo:
